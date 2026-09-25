@@ -1,4 +1,3 @@
-import {Card} from "../models/Card";
 import {cards} from "../data/bankCards";
 
 export function checkCard(cardNumber: string): boolean {
@@ -7,5 +6,6 @@ export function checkCard(cardNumber: string): boolean {
     if (!card || card.isBlocked) {
         return false;
     }
+
     return true;
 }
