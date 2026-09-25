@@ -12,63 +12,63 @@ function isYes(answer: string): boolean {
 
 function authenticate(): boolean {
     while (true) {
-        const pin = prompt("Введите PIN: ").trim();
+        const pin = prompt("Enter PIN: ").trim();
 
         if (atm.checkPin(pin)) {
-            console.log("PIN верный.");
+            console.log("PIN is correct.");
             return true;
         }
 
         if (atm.isCardBlocked()) {
-            console.log("Карта заблокирована после 3 неправильных попыток.");
+            console.log("Card has been blocked after 3 incorrect attempts.");
             return false;
         }
 
         console.log(
-            `Неверный PIN. Осталось попыток: ${atm.getRemainingPinAttempts()}`
+            `Incorrect PIN. Remaining attempts: ${atm.getRemainingPinAttempts()}`
         );
     }
 }
 
 function readAmount(): number {
     while (true) {
-        const input = prompt("Введите сумму для снятия: ").trim();
+        const input = prompt("Enter the withdrawal amount: ").trim();
         const amount = Number(input);
 
         if (Number.isInteger(amount) && amount > 0) {
             return amount;
         }
 
-        console.log("Введите положительное целое число.");
+        console.log("Please enter a positive whole number.");
     }
 }
 
 function showDispensedCash(): void {
     const inventory = atm.getBanknoteInventory();
 
-    console.log("Купюры, оставшиеся в банкомате:");
+    console.log("Banknotes remaining in the ATM:");
 
     for (const banknote of inventory) {
         console.log(
-            `${banknote.denomination} грн: ${banknote.quantity} шт.`
+            `${banknote.denomination} UAH: ${banknote.quantity} pcs.`
         );
     }
 }
 
 function doCardSession(): void {
     while (true) {
-        console.log("\nВыберите операцию:");
-        console.log("1 - Проверить баланс");
-        console.log("2 - Снять деньги");
-        console.log("3 - Завершить работу с картой");
+        console.log("\nSelect an operation:");
+        console.log("1 - Check balance");
+        console.log("2 - Withdraw cash");
+        console.log("3 - Finish session");
 
-        const operation = prompt("Ваш выбор: ").trim();
+        const operation = prompt("Your choice: ").trim();
 
         if (operation === "1") {
             const balance = atm.getBalance();
 
             if (balance !== null) {
-                console.log(`Ваш баланс: ${balance} грн.`);
+                console.log(`Your balance: ${balance} UAH.`);
             }
         } else if (operation === "2") {
             const amount = readAmount();
@@ -77,18 +77,18 @@ function doCardSession(): void {
             console.log(result.message);
 
             if (result.success) {
-                console.log("Выдано:");
+                console.log("Dispensed:");
 
                 for (const banknote of result.dispensed) {
                     console.log(
-                        `${banknote.denomination} грн x ${banknote.quantity}`
+                        `${banknote.denomination} UAH x ${banknote.quantity}`
                     );
                 }
 
                 const balance = atm.getBalance();
 
                 if (balance !== null) {
-                    console.log(`Новый баланс: ${balance} грн.`);
+                    console.log(`New balance: ${balance} UAH.`);
                 }
 
                 showDispensedCash();
@@ -96,19 +96,19 @@ function doCardSession(): void {
         } else if (operation === "3") {
             break;
         } else {
-            console.log("Неизвестная операция.");
+            console.log("Unknown operation.");
             continue;
         }
 
         const continueWorking = prompt(
-            "\nПродолжить работу с этой картой? (y/n): "
+            "\nContinue using this card? (y/n): "
         );
 
         if (!isYes(continueWorking)) {
             break;
         }
 
-        console.log("Для продолжения работы снова введите PIN.");
+        console.log("To continue, enter your PIN again.");
 
         if (!authenticate()) {
             break;
@@ -116,18 +116,18 @@ function doCardSession(): void {
     }
 
     atm.returnCard();
-    console.log("Карта возвращена.");
+    console.log("Card returned.");
 }
 
 while (true) {
-    console.log("\n===== БАНКОМАТ =====");
+    console.log("\n===== ATM =====");
 
-    const cardNumber = prompt("Введите номер карты: ").trim();
+    const cardNumber = prompt("Enter card number: ").trim();
 
     if (!atm.insertCard(cardNumber)) {
-        console.log("Карта не найдена или заблокирована.");
+        console.log("Card not found or blocked.");
 
-        const retry = prompt("Попробовать другую карту? (y/n): ");
+        const retry = prompt("Try another card? (y/n): ");
 
         if (!isYes(retry)) {
             break;
@@ -136,12 +136,12 @@ while (true) {
         continue;
     }
 
-    console.log("Карта принята.");
+    console.log("Card accepted.");
 
     if (!authenticate()) {
         atm.returnCard();
 
-        const retry = prompt("Попробовать другую карту? (y/n): ");
+        const retry = prompt("Try another card? (y/n): ");
 
         if (!isYes(retry)) {
             break;
@@ -153,7 +153,7 @@ while (true) {
     doCardSession();
 
     const newSession = prompt(
-        "\nНачать обслуживание новой карты? (y/n): "
+        "\nStart a new card session? (y/n): "
     );
 
     if (!isYes(newSession)) {
@@ -161,4 +161,4 @@ while (true) {
     }
 }
 
-console.log("Работа банкомата завершена.");
+console.log("ATM session ended.");
