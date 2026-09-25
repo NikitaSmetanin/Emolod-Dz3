@@ -67,7 +67,7 @@ export class ATM {
         if (!this.currentCard) {
             return {
                 success: false,
-                message: "Карта не вставлена.",
+                message: "No card is inserted.",
                 dispensed: [],
             };
         }
@@ -75,7 +75,7 @@ export class ATM {
         if (!Number.isInteger(amount) || amount <= 0) {
             return {
                 success: false,
-                message: "Сумма должна быть положительным целым числом.",
+                message: "The amount must be a positive whole number.",
                 dispensed: [],
             };
         }
@@ -83,7 +83,7 @@ export class ATM {
         if (amount % 100 !== 0) {
             return {
                 success: false,
-                message: "Банкомат выдает только суммы, кратные 100.",
+                message: "The ATM dispenses only amounts divisible by 100.",
                 dispensed: [],
             };
         }
@@ -91,7 +91,7 @@ export class ATM {
         if (amount > this.currentCard.balance) {
             return {
                 success: false,
-                message: "Недостаточно средств на карте.",
+                message: "Insufficient funds on the card.",
                 dispensed: [],
             };
         }
@@ -106,7 +106,7 @@ export class ATM {
             return {
                 success: false,
                 message:
-                    "Банкомат не может выдать эту сумму из имеющихся купюр.",
+                    "The ATM cannot dispense this amount using the available banknotes.",
                 dispensed: [],
             };
         }
@@ -126,7 +126,7 @@ export class ATM {
 
         return {
             success: true,
-            message: "Деньги успешно выданы.",
+            message: "Cash has been successfully dispensed.",
             dispensed,
         };
     }
